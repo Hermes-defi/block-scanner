@@ -1,0 +1,6 @@
+.env
+node_modules
+addresses-merged.txt
+addresses.csv
+addresses.txt
+.idea
