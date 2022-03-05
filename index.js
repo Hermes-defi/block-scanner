@@ -19,18 +19,18 @@ function delay(){
         resolve();
     }, 10))
 }
-let balances = {};
+let balances = {}, bytx = [];
 async function events(ctx) {
     // const start = 23539122;
     // const   end = 23539123;
     const start = 20699464;
-    const   end = 23592909;
+    const   end = 23681398;
     let size = 1000;
     for (let i = start; i < end; i += size) {
         const from = i;
-        const to = i + size;
+        const to = (i + size) - 1;
         // await delay();
-        console.log(`i=${i}, from=${from}, to=${to} ${to-i}`);
+        console.log(`i=${i}, from=${from}, to=${to}`);
         await ctx.getPastEvents({}, {fromBlock: from, toBlock: to},
             function (error, events) {
                 if (error) {
@@ -39,12 +39,17 @@ async function events(ctx) {
                     for (let j = 0; j < events.length; j++) {
                         const e = events[j];
                         if ( ! e.event ) continue;
+                        // console.log(e);
                         // if (e.event != 'Deposit') continue;
                         const user = e.returnValues;
                         if( ! balances[user.user] )
                             balances[user.user] = 0;
-                        balances[user.user] += parseInt(user.amount)/1e18;
-                        console.log('\t', user.user, user.amount);
+                        const amount = parseInt(user.amount)/1e18;
+                        balances[user.user] += amount;
+                        console.log('\t', user.user, amount);
+
+                        bytx.push(`${e.transactionHash},${user.user},${amount}`)
+
                     }
                 }
             });
@@ -58,15 +63,18 @@ async function main(){
     await events(ctx3);
     await events(ctx4);
     await events(ctx5);
-    let txt = [];
-    console.log('building balances...');
-    for( let i in balances ){
-        txt.push( await balance(i,ctx4) );
-    }
-    console.log('writing addresses.txt');
-    fs.writeFileSync('./addresses.txt', txt.join('\n'));
-    console.log('margin balances');
-    mergeBalances();
+
+    fs.writeFileSync('./bytx.txt', bytx.join('\n') );
+
+    // let txt = [];
+    // console.log('building balances...');
+    // for( let i in balances ){
+    //     txt.push( await balance(i,ctx4) );
+    // }
+    // console.log('writing addresses.txt');
+    // fs.writeFileSync('./addresses.txt', txt.join('\n'));
+    // console.log('margin balances');
+    // mergeBalances();
 }
 
 
