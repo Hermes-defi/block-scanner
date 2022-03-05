@@ -15,14 +15,19 @@ const jsonInterface = [
     {"type": "function", "stateMutability": "view", "inputs": [{"name": "", "internalType": "address", "type": "address"}], "outputs": [{"name": "amount", "type": "uint256", "internalType": "uint256"}, {"internalType": "uint256", "type": "uint256", "name": "rewardDebt"}], "name": "userInfo"}
 ];
 
-const ctx1 = new web3.eth.Contract(jsonInterface, '0xb684CAB219dE861a49b396Ae3BbB1fc8702286E3');
-const ctx2 = new web3.eth.Contract(jsonInterface, '0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61');
-const ctx3 = new web3.eth.Contract(jsonInterface, '0xB3617363eDEc16cB0D30a5912Eb7A6B1D48e2875');
-const ctx4 = new web3.eth.Contract(jsonInterface, '0x3074cf20ecd1cfe96b3ee43968d0c426f775171a');
-const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED');
+const ctx1 = new web3.eth.Contract(jsonInterface, '0xb684CAB219dE861a49b396Ae3BbB1fc8702286E3'); // MAGIC Bank
+const ctx2 = new web3.eth.Contract(jsonInterface, '0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61'); // UNI Bank
+const ctx3 = new web3.eth.Contract(jsonInterface, '0xB3617363eDEc16cB0D30a5912Eb7A6B1D48e2875'); // LUMEN Bank
+const ctx4 = new web3.eth.Contract(jsonInterface, '0x3074cf20ecd1cfe96b3ee43968d0c426f775171a'); // DAI Bank
+const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED'); // HLY Bank
 
 let balances = {}, bytx = [];
 async function events(ctx) {
+<<<<<<< HEAD
+=======
+    const start = 20699464; // 2021-12-19T19:31:54.000Z
+    const   end = 23670112; // 2022-03-04T17:20:05.000Z
+>>>>>>> bc443284ebe2510e1205799345382ad808393f93
     let size = 1000;
     for (let i = BLOCK_START; i < BLOCK_END; i += size) {
         const from = i;
@@ -64,6 +69,10 @@ async function scanBlockchain(){
     console.log('\tscan completed and bytx.txt generated with all tx.')
 }
 
+<<<<<<< HEAD
+=======
+const RATIO = 0.6610169492; // Bank bonus swap ratio
+>>>>>>> bc443284ebe2510e1205799345382ad808393f93
 async function main(){
     console.log('loading bytx.txt...');
     const bytx = fs.readFileSync('./bytx.txt', 'utf-8').split('\n');
