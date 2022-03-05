@@ -1,18 +1,25 @@
 'use strict'
 const fs = require('fs');
-const rpc = 'wss://a.ws.s0.t.hmny.io';
+
+// use this rpc for the scan
+const rpcArchive = 'wss://a.ws.s0.t.hmny.io';
+
+// use this rpc for balance
+const rpcBalance = 'https://rpc.hermesdefi.io/';
+
+
 const Web3 = require('web3');
-const web3 = new Web3(rpc);
+const web3 = new Web3(rpcBalance);
 const jsonInterface = [
     {"name": "Deposit", "type": "event", "anonymous": false, "inputs": [{"name": "user", "indexed": true, "internalType": "address", "type": "address"}, {"internalType": "uint256", "type": "uint256", "indexed": false, "name": "amount"}]},
     {"type": "function", "stateMutability": "view", "inputs": [{"name": "", "internalType": "address", "type": "address"}], "outputs": [{"name": "amount", "type": "uint256", "internalType": "uint256"}, {"internalType": "uint256", "type": "uint256", "name": "rewardDebt"}], "name": "userInfo"}
 ];
 
-const ctx1 = new web3.eth.Contract(jsonInterface, '0xb684CAB219dE861a49b396Ae3BbB1fc8702286E3');
-const ctx2 = new web3.eth.Contract(jsonInterface, '0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61');
-const ctx3 = new web3.eth.Contract(jsonInterface, '0xB3617363eDEc16cB0D30a5912Eb7A6B1D48e2875');
-const ctx4 = new web3.eth.Contract(jsonInterface, '0x3074cf20ecd1cfe96b3ee43968d0c426f775171a');
-const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED');
+const ctx1 = new web3.eth.Contract(jsonInterface, '0xb684CAB219dE861a49b396Ae3BbB1fc8702286E3'); // MAGIC Bank
+const ctx2 = new web3.eth.Contract(jsonInterface, '0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61'); // UNI Bank
+const ctx3 = new web3.eth.Contract(jsonInterface, '0xB3617363eDEc16cB0D30a5912Eb7A6B1D48e2875'); // LUMEN Bank
+const ctx4 = new web3.eth.Contract(jsonInterface, '0x3074cf20ecd1cfe96b3ee43968d0c426f775171a'); // DAI Bank
+const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED'); // HLY Bank
 
 function delay(){
     return new Promise((resolve) => setTimeout(function(){
@@ -21,7 +28,7 @@ function delay(){
 }
 let balances = {}, bytx = [];
 async function events(ctx) {
-    const start = 20699464;
+    const start = 20699464; // 2021-12-19T19:31:54.000Z
     const   end = 23670112; // 2022-03-04T17:20:05.000Z
     let size = 1000;
     for (let i = start; i < end; i += size) {
@@ -55,61 +62,52 @@ async function events(ctx) {
 
 }
 
-async function main(){
+async function scan(){
     await events(ctx1);
     await events(ctx2);
     await events(ctx3);
     await events(ctx4);
     await events(ctx5);
-
     fs.writeFileSync('./bytx.txt', bytx.join('\n') );
 
+}
+
+const RATIO = 0.6610169492; // Bank bonus swap ratio
+async function main(){
+    console.log('loading bytx.txt...');
+    const bytx = fs.readFileSync('./bytx.txt', 'utf-8').split('\n');
+    let balancesArray = [];
+    for( let i in bytx ){
+        const id = bytx[i].split(',')[1];
+        if( balances[id] ) continue;
+        balances[id] = true;
+        balancesArray.push(id);
+    }
     let txt = [];
-    console.log('building balances...');
-    for( let i in balances ){
-        txt.push( await balance(i,ctx4) );
+    const balancesTotal = balancesArray.length;
+    console.log('building balances... total '+balancesTotal);
+    for( let i = 0 ; i < balancesTotal; i ++ ){
+        const address = balancesArray[i];
+        const balance1 = await balance(address,ctx1);
+        const balance2 = await balance(address,ctx2);
+        const balance3 = await balance(address,ctx3);
+        const balance4 = await balance(address,ctx4);
+        const balance5 = await balance(address,ctx5);
+        const total = balance1 + balance2 + balance3 + balance4 + balance5;
+        const HRMS = total * RATIO;
+        const info = address+","+total+","+RATIO+","+HRMS ;
+        txt.push( info );
+        console.log(i+' of '+balancesTotal+') '+info);
     }
     console.log('writing addresses.txt');
     fs.writeFileSync('./addresses.txt', txt.join('\n'));
-    console.log('margin balances');
-    mergeBalances();
+    console.log('done.')
 }
-
-
-
 async function balance(user, ctx){
     const info4 = await ctx.methods.userInfo(user).call();
-    const amount = (info4.amount.toString())/1e18;
-    const ratio = 0.6610169492;
-    const HRMS = amount * ratio;
-    return user+","+amount+","+ratio+","+HRMS ;
-}
-async function test(){
-    const bal = await balance('0x01d5e2a324bd51c95556bE094BbaF7d0D48c3D7f',ctx4);
-    console.log(bal);
+    return parseFloat( web3.utils.fromWei( info4.amount.toString() ) );
 }
 
-function mergeBalances(){
-    const lines = fs.readFileSync('./addresses.txt', 'utf-8').split('\n');
-    const t = lines.length;
-    let res = {};
-    for( let i = 0 ; i < t ; i ++ ){
-        const p = lines[i].split(',');
-        const u = p[0];
-        const v = parseFloat(p[1]);
-        if( ! v ) continue;
-        let vv = res[u] ? res[u] : 0;
-        vv += v;
-        res[u] = vv;
-    }
-
-    let final = []
-    for( let u in res ){
-        const vv = res[u] * 0.6610169492;
-        final.push( u+','+res[u]+',0.6610169492,'+vv );
-    }
-    fs.writeFileSync('./addresses-merged.txt', final.join('\n'));
-}
 
 
 main();
