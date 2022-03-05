@@ -1,15 +1,15 @@
 'use strict'
-const fs = require('fs');
 
+//const BLOCK_START = 20699464;
+const BLOCK_START = 23499464;
+const BLOCK_END   = 23679000;
+const RATIO = 0.6610169492;
+
+const fs = require('fs');
 // use this rpc for the scan
 const rpcArchive = 'wss://a.ws.s0.t.hmny.io';
-
-// use this rpc for balance
-const rpcBalance = 'https://rpc.hermesdefi.io/';
-
-
 const Web3 = require('web3');
-const web3 = new Web3(rpcBalance);
+const web3 = new Web3(rpcArchive);
 const jsonInterface = [
     {"name": "Deposit", "type": "event", "anonymous": false, "inputs": [{"name": "user", "indexed": true, "internalType": "address", "type": "address"}, {"internalType": "uint256", "type": "uint256", "indexed": false, "name": "amount"}]},
     {"type": "function", "stateMutability": "view", "inputs": [{"name": "", "internalType": "address", "type": "address"}], "outputs": [{"name": "amount", "type": "uint256", "internalType": "uint256"}, {"internalType": "uint256", "type": "uint256", "name": "rewardDebt"}], "name": "userInfo"}
@@ -21,22 +21,12 @@ const ctx3 = new web3.eth.Contract(jsonInterface, '0xB3617363eDEc16cB0D30a5912Eb
 const ctx4 = new web3.eth.Contract(jsonInterface, '0x3074cf20ecd1cfe96b3ee43968d0c426f775171a');
 const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED');
 
-function delay(){
-    return new Promise((resolve) => setTimeout(function(){
-        resolve();
-    }, 10))
-}
 let balances = {}, bytx = [];
 async function events(ctx) {
-    // const start = 23539122;
-    // const   end = 23539123;
-    const start = 20699464;
-    const   end = 23679000;
     let size = 1000;
-    for (let i = start; i < end; i += size) {
+    for (let i = BLOCK_START; i < BLOCK_END; i += size) {
         const from = i;
         const to = (i + size) - 1;
-        // await delay();
         console.log(`i=${i}, from=${from}, to=${to}`);
         await ctx.getPastEvents({}, {fromBlock: from, toBlock: to},
             function (error, events) {
@@ -64,16 +54,16 @@ async function events(ctx) {
 
 }
 
-async function scan(){
+async function scanBlockchain(){
     await events(ctx1);
     await events(ctx2);
     await events(ctx3);
     await events(ctx4);
     await events(ctx5);
     fs.writeFileSync('./bytx.txt', bytx.join('\n') );
-
+    console.log('\tscan completed and bytx.txt generated with all tx.')
 }
-const RATIO = 0.6610169492;
+
 async function main(){
     console.log('loading bytx.txt...');
     const bytx = fs.readFileSync('./bytx.txt', 'utf-8').split('\n');
@@ -110,6 +100,18 @@ async function balance(user, ctx){
 }
 
 
+let txExits = false;
+try{
+    txExits = fs.existsSync('./bytx.txt')
+}catch(e){
 
+}
+
+console.log('txExits', txExits)
+if( ! txExits ){
+    console.log('Scanning blockchain to load all deposit transactions...')
+    scanBlockchain();
+}
+console.log('Building whitelist based on transaction list...')
 main();
 
