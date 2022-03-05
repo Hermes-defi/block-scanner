@@ -1,6 +1,6 @@
 'use strict'
 const fs = require('fs');
-const rpc = 'https://a.api.s0.t.hmny.io';
+const rpc = 'wss://a.ws.s0.t.hmny.io';
 const Web3 = require('web3');
 const web3 = new Web3(rpc);
 const jsonInterface = [
