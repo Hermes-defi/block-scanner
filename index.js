@@ -1,8 +1,15 @@
 'use strict'
 const fs = require('fs');
-const rpc = 'wss://a.ws.s0.t.hmny.io';
+
+// use this rpc for the scan
+const rpcArchive = 'wss://a.ws.s0.t.hmny.io';
+
+// use this rpc for balance
+const rpcBalance = 'https://rpc.hermesdefi.io/';
+
+
 const Web3 = require('web3');
-const web3 = new Web3(rpc);
+const web3 = new Web3(rpcBalance);
 const jsonInterface = [
     {"name": "Deposit", "type": "event", "anonymous": false, "inputs": [{"name": "user", "indexed": true, "internalType": "address", "type": "address"}, {"internalType": "uint256", "type": "uint256", "indexed": false, "name": "amount"}]},
     {"type": "function", "stateMutability": "view", "inputs": [{"name": "", "internalType": "address", "type": "address"}], "outputs": [{"name": "amount", "type": "uint256", "internalType": "uint256"}, {"internalType": "uint256", "type": "uint256", "name": "rewardDebt"}], "name": "userInfo"}
@@ -57,61 +64,51 @@ async function events(ctx) {
 
 }
 
-async function main(){
+async function scan(){
     await events(ctx1);
     await events(ctx2);
     await events(ctx3);
     await events(ctx4);
     await events(ctx5);
-
     fs.writeFileSync('./bytx.txt', bytx.join('\n') );
 
-    // let txt = [];
-    // console.log('building balances...');
-    // for( let i in balances ){
-    //     txt.push( await balance(i,ctx4) );
-    // }
-    // console.log('writing addresses.txt');
-    // fs.writeFileSync('./addresses.txt', txt.join('\n'));
-    // console.log('margin balances');
-    // mergeBalances();
 }
-
-
-
+const RATIO = 0.6610169492;
+async function main(){
+    console.log('loading bytx.txt...');
+    const bytx = fs.readFileSync('./bytx.txt', 'utf-8').split('\n');
+    let balancesArray = [];
+    for( let i in bytx ){
+        const id = bytx[i].split(',')[1];
+        if( balances[id] ) continue;
+        balances[id] = true;
+        balancesArray.push(id);
+    }
+    let txt = [];
+    const balancesTotal = balancesArray.length;
+    console.log('building balances... total '+balancesTotal);
+    for( let i = 0 ; i < balancesTotal; i ++ ){
+        const address = balancesArray[i];
+        const balance1 = await balance(address,ctx1);
+        const balance2 = await balance(address,ctx2);
+        const balance3 = await balance(address,ctx3);
+        const balance4 = await balance(address,ctx4);
+        const balance5 = await balance(address,ctx5);
+        const total = balance1 + balance2 + balance3 + balance4 + balance5;
+        const HRMS = total * RATIO;
+        const info = address+","+total+","+RATIO+","+HRMS ;
+        txt.push( info );
+        console.log(i+' of '+balancesTotal+') '+info);
+    }
+    console.log('writing addresses.txt');
+    fs.writeFileSync('./addresses.txt', txt.join('\n'));
+    console.log('done.')
+}
 async function balance(user, ctx){
     const info4 = await ctx.methods.userInfo(user).call();
-    const amount = (info4.amount.toString())/1e18;
-    const ratio = 0.6610169492;
-    const HRMS = amount * ratio;
-    return user+","+amount+","+ratio+","+HRMS ;
-}
-async function test(){
-    const bal = await balance('0x01d5e2a324bd51c95556bE094BbaF7d0D48c3D7f',ctx4);
-    console.log(bal);
+    return parseFloat( web3.utils.fromWei( info4.amount.toString() ) );
 }
 
-function mergeBalances(){
-    const lines = fs.readFileSync('./addresses.txt', 'utf-8').split('\n');
-    const t = lines.length;
-    let res = {};
-    for( let i = 0 ; i < t ; i ++ ){
-        const p = lines[i].split(',');
-        const u = p[0];
-        const v = parseFloat(p[1]);
-        if( ! v ) continue;
-        let vv = res[u] ? res[u] : 0;
-        vv += v;
-        res[u] = vv;
-    }
-
-    let final = []
-    for( let u in res ){
-        const vv = res[u] * 0.6610169492;
-        final.push( u+','+res[u]+',0.6610169492,'+vv );
-    }
-    fs.writeFileSync('./addresses-merged.txt', final.join('\n'));
-}
 
 
 main();
