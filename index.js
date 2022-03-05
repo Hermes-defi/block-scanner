@@ -1,6 +1,5 @@
 'use strict'
 
-//const BLOCK_START = 20699464;
 const BLOCK_START = 20699464; // 2021-12-19T19:31:54.000Z
 const BLOCK_END   = 23670112; // 2022-03-04T17:20:05.000Z
 const RATIO = 0.6610169492; // Bank Swap Ratio
@@ -64,7 +63,7 @@ async function scanBlockchain(){
     console.log('\tscan completed and bytx.txt generated with all tx.')
 }
 
-async function main(){
+async function generateBalance(){
     console.log('loading bytx.txt...');
     const bytx = fs.readFileSync('./bytx.txt', 'utf-8').split('\n');
     let balancesArray = [];
@@ -100,18 +99,23 @@ async function balance(user, ctx){
 }
 
 
-let txExits = false;
-try{
-    txExits = fs.existsSync('./bytx.txt')
-}catch(e){
+function fileExist(file){
+    try{
+        return fs.existsSync(file)
+    }catch(e){
 
+    }
+    return false;
 }
 
-console.log('txExits', txExits)
-if( ! txExits ){
-    console.log('Scanning blockchain to load all deposit transactions...')
-    scanBlockchain();
+
+async function main(){
+    if( ! fileExist('bytx.txt') ){
+        console.log('Scanning blockchain to load all deposit transactions...')
+        await scanBlockchain();
+    }
+    console.log('Building whitelist based on transaction list...')
+    await generateBalance();
 }
-console.log('Building whitelist based on transaction list...')
+
 main();
-
