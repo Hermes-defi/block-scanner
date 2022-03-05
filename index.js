@@ -21,10 +21,8 @@ function delay(){
 }
 let balances = {}, bytx = [];
 async function events(ctx) {
-    // const start = 23539122;
-    // const   end = 23539123;
     const start = 20699464;
-    const   end = 23679000;
+    const   end = 23670112; // 2022-03-04T17:20:05.000Z
     let size = 1000;
     for (let i = start; i < end; i += size) {
         const from = i;
@@ -66,15 +64,15 @@ async function main(){
 
     fs.writeFileSync('./bytx.txt', bytx.join('\n') );
 
-    // let txt = [];
-    // console.log('building balances...');
-    // for( let i in balances ){
-    //     txt.push( await balance(i,ctx4) );
-    // }
-    // console.log('writing addresses.txt');
-    // fs.writeFileSync('./addresses.txt', txt.join('\n'));
-    // console.log('margin balances');
-    // mergeBalances();
+    let txt = [];
+    console.log('building balances...');
+    for( let i in balances ){
+        txt.push( await balance(i,ctx4) );
+    }
+    console.log('writing addresses.txt');
+    fs.writeFileSync('./addresses.txt', txt.join('\n'));
+    console.log('margin balances');
+    mergeBalances();
 }
 
 
