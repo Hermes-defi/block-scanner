@@ -1,9 +1,9 @@
 'use strict'
 
 //const BLOCK_START = 20699464;
-const BLOCK_START = 23499464;
-const BLOCK_END   = 23679000;
-const RATIO = 0.6610169492;
+const BLOCK_START = 20699464; // 2021-12-19T19:31:54.000Z
+const BLOCK_END   = 23670112; // 2022-03-04T17:20:05.000Z
+const RATIO = 0.6610169492; // Bank Swap Ratio
 
 const fs = require('fs');
 // use this rpc for the scan
@@ -23,11 +23,6 @@ const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1
 
 let balances = {}, bytx = [];
 async function events(ctx) {
-<<<<<<< HEAD
-=======
-    const start = 20699464; // 2021-12-19T19:31:54.000Z
-    const   end = 23670112; // 2022-03-04T17:20:05.000Z
->>>>>>> bc443284ebe2510e1205799345382ad808393f93
     let size = 1000;
     for (let i = BLOCK_START; i < BLOCK_END; i += size) {
         const from = i;
@@ -69,10 +64,6 @@ async function scanBlockchain(){
     console.log('\tscan completed and bytx.txt generated with all tx.')
 }
 
-<<<<<<< HEAD
-=======
-const RATIO = 0.6610169492; // Bank bonus swap ratio
->>>>>>> bc443284ebe2510e1205799345382ad808393f93
 async function main(){
     console.log('loading bytx.txt...');
     const bytx = fs.readFileSync('./bytx.txt', 'utf-8').split('\n');
