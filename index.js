@@ -24,7 +24,7 @@ async function events(ctx) {
     // const start = 23539122;
     // const   end = 23539123;
     const start = 20699464;
-    const   end = 23681398;
+    const   end = 23679000;
     let size = 1000;
     for (let i = start; i < end; i += size) {
         const from = i;
