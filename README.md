@@ -1,5 +1,5 @@
 # Checking your balance
-If you wish to verify your calculated PLTS amount across all banks and the corresponding HRMS you will recieve at the bonus swap rate, open https://raw.githubusercontent.com/Hermes-defi/block-scanner/main/addresses.txt and search for your address. 
+If you wish to verify your calculated PLTS amount across all banks and the corresponding HRMS you will receive at the bonus swap rate, open https://raw.githubusercontent.com/Hermes-defi/block-scanner/main/addresses.txt and search for your address. 
 The format of addresses.txt is:
 address, total PLTS, Ratio, reward HRMS
 
