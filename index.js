@@ -84,12 +84,14 @@ async function generateBalance(){
         const balance4 = await balance(address,ctx4);
         const balance5 = await balance(address,ctx5);
         const total = balance1 + balance2 + balance3 + balance4 + balance5;
+        // const total = balance1 + balance5
         const unlockedbank = balance4 + balance3 + balance2; // Unlocked before May 4th
         const lockedbank = balance1 + balance5; // Estimated unlock > May 4th
         const HRMS = total * RATIO;
         const unlockedHRMS = unlockedbank * RATIO;
         const airdropHRMS = lockedbank * RATIO;
         const info = address+","+total+","+ unlockedbank +","+ lockedbank +","+RATIO+","+HRMS+","+unlockedHRMS+","+airdropHRMS;
+        // const info = address+","+total+","+lockedbank+","+RATIO+","+HRMS+","+airdropHRMS;
         txt.push( info );
         console.log(i+' of '+balancesTotal+') '+info);
     }
@@ -98,7 +100,7 @@ async function generateBalance(){
 
     let txtFiltered = [];
     for (let i = 0; i < txt.length; i++) {
-        if (txt[i].info[4] > 0) {
+        if (txt[i].split(',').at(3) > 0) {
             txtFiltered.push(txt[i]);
         }
     }
