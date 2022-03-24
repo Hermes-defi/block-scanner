@@ -1,11 +1,11 @@
 # Checking your balance
-If you wish to verify your calculated PLTS amount across all banks and the corresponding HRMS you will receive at the bonus swap rate, open https://raw.githubusercontent.com/Hermes-defi/block-scanner/main/addresses.txt and search for your address. 
-The format of addresses.txt is:
+If you wish to verify your calculated PLTS amount across all banks and the corresponding HRMS you will receive at the bonus swap rate, open https://github.com/Hermes-defi/block-scanner/blob/main/all_addresses.txt and search for your address.
+The format of all_addresses.txt is:
 
 `address, total PLTS, UnlockedBank PLTS (1DAI, LUMEN, UNI), LockedBank PLTS (MAGIC, HLY), Ratio, total HRMS, unlockedHRMS, airdroppedHRMS`
 
 # Updates due to Bank Lock Configuration
-Due to a configuration error in the Bank deployment function, our Banks are unlocking at different times than the bonus reward end block. Our Audit report from Certik is expected by April 29th at the latest. We are splitting the banks into two groups based on if they will be unlocked by our new (delayed) DEX launch.
+Due to a configuration error in the Bank deployment function, our Banks are unlocking at different times than the bonus reward end block. Our Audit report from Certik is expected by April 29th at the latest. We are splitting the banks into two groups based on if they will be unlocked by our new (delayed) DEX launch. If you are affected by this, you can view your address in https://github.com/Hermes-defi/block-scanner/blob/main/affected_addresses.txt
 
 ## Unlocked by launch
 ```
