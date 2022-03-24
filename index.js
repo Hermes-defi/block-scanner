@@ -84,10 +84,10 @@ async function generateBalance(){
         const balance4 = await balance(address,ctx4);
         const balance5 = await balance(address,ctx5);
         const total = balance1 + balance2 + balance3 + balance4 + balance5;
-        const daibank = balance4;
-        const otherbank = balance1 + balance2 + balance3 + balance5;
+        const unlockedbank = balance4 + balance3 + balance2; // Unlocked before May 4th
+        const lockedbank = balance1 + balance5; // Estimated unlock > May 4th
         const HRMS = total * RATIO;
-        const info = address+","+total+","+ daibank +","+ otherbank +","+RATIO+","+HRMS ;
+        const info = address+","+total+","+ unlockedbank +","+ lockedbank +","+RATIO+","+HRMS ;
         txt.push( info );
         console.log(i+' of '+balancesTotal+') '+info);
     }
