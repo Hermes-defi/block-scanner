@@ -87,13 +87,25 @@ async function generateBalance(){
         const unlockedbank = balance4 + balance3 + balance2; // Unlocked before May 4th
         const lockedbank = balance1 + balance5; // Estimated unlock > May 4th
         const HRMS = total * RATIO;
-        const info = address+","+total+","+ unlockedbank +","+ lockedbank +","+RATIO+","+HRMS ;
+        const unlockedHRMS = unlockedbank * RATIO;
+        const airdropHRMS = lockedbank * RATIO;
+        const info = address+","+total+","+ unlockedbank +","+ lockedbank +","+RATIO+","+HRMS+","+unlockedHRMS+","+airdropHRMS;
         txt.push( info );
         console.log(i+' of '+balancesTotal+') '+info);
     }
-    console.log('writing addresses.txt');
-    fs.writeFileSync('./addresses.txt', txt.join('\n'));
-    console.log('done.')
+    console.log('writing all_addresses.txt');
+    fs.writeFileSync('./all_addresses.txt', txt.join('\n'));
+
+    let txtFiltered = [];
+    for (let i = 0; i < txt.length; i++) {
+        if (txt[i].info[4] > 0) {
+            txtFiltered.push(txt[i]);
+        }
+    }
+
+    console.log('writing affected_addresses.txt');
+    fs.writeFileSync('./affected_addresses.txt', txtFiltered.join('\n'));
+    console.log('done.');
 }
 async function balance(user, ctx){
     const info4 = await ctx.methods.userInfo(user).call();
