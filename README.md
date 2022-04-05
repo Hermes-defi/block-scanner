@@ -27,7 +27,7 @@ Because users will not be able to swap PLTS contained within the locked banks, w
 - Run `node index.js` and wait to generate bytx.txt and later addresses.txt
 - Check your balance on addresses.txt
 
-# How to run using Ubuntu
+# How to test using Ubuntu
 
 Create a dir to hold the project:
  - $ cd Hermes/
