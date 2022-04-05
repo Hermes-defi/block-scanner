@@ -30,16 +30,16 @@ Because users will not be able to swap PLTS contained within the locked banks, w
 # How to run using Ubuntu
 
 Create a dir to hold the project:
- $ cd Hermes/
+ - $ cd Hermes/
 
 Clone the HERMES-presale-contract:
- $ git clone https://github.com/pythinking/HERMES-presale-contracts.git
+ - $ git clone https://github.com/pythinking/HERMES-presale-contracts.git
 
 Enter dir
- $ cd HERMES-presale-contracts/
+ - cd HERMES-presale-contracts/
 
 Install dependencies
- $ yarn install
+ - yarn install
 
 Connect your metamask to Harmony testnet
 https://docs.harmony.one/home/general/wallets/browser-extensions-wallets/metamask-wallet/adding-harmony
@@ -47,10 +47,10 @@ https://docs.harmony.one/home/general/wallets/browser-extensions-wallets/metamas
 
 
 Compile the contract
- $ npx hardhat compile
+ - npx hardhat compile
 
 Run tests scripts
 
- $ PRIVATE_KEY=df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14exxxxxx npx hardhat compile
- $ PRIVATE_KEY=df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14xxxxxxx npx hardhat run scripts/testnet-deploy.js 
+ - PRIVATE_KEY=df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14exxxxxx npx hardhat compile
+ - PRIVATE_KEY=df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14xxxxxxx npx hardhat run scripts/testnet-deploy.js 
 
