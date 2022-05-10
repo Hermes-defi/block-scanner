@@ -84,9 +84,8 @@ async function generateBalance(){
         const balance4 = await balance(address,ctx4);
         const balance5 = await balance(address,ctx5);
         const total = balance1 + balance2 + balance3 + balance4 + balance5;
-        // const total = balance1 + balance5
-        const unlockedbank = balance4 + balance3 + balance2; // Unlocked before May 4th
-        const lockedbank = balance1 + balance5; // Estimated unlock > May 4th
+        const unlockedbank = balance1 + balance4 + balance3 + balance2; // Unlock before May 11th
+        const lockedbank = balance5; // Unlock after May 11th
         const HRMS = total * RATIO;
         const unlockedHRMS = unlockedbank * RATIO;
         const airdropHRMS = lockedbank * RATIO;
