@@ -1,9 +1,5 @@
 'use strict'
 
-const BLOCK_START = 23670112; // 2022-03-04T17:20:05.000Z
-const BLOCK_END   = 'latest';
-const RATIO = 0.5603998308; // Public Swap Ratio
-
 const fs = require('fs');
 // use this rpc for the scan
 const rpcArchive = 'wss://a.ws.s0.t.hmny.io';
@@ -13,6 +9,11 @@ const jsonInterface = [
     {"name": "Deposit", "type": "event", "anonymous": false, "inputs": [{"name": "user", "indexed": true, "internalType": "address", "type": "address"}, {"internalType": "uint256", "type": "uint256", "indexed": false, "name": "amount"}]},
     {"type": "function", "stateMutability": "view", "inputs": [{"name": "", "internalType": "address", "type": "address"}], "outputs": [{"name": "amount", "type": "uint256", "internalType": "uint256"}, {"internalType": "uint256", "type": "uint256", "name": "rewardDebt"}], "name": "userInfo"}
 ];
+
+const BLOCK_START = 23670112; // 2022-03-04T17:20:05.000Z
+const BLOCK_END   = 26522378; // 2022-05-14T16:35:00.EST
+console.log(BLOCK_END);
+const RATIO = 0.5603998308; // Public Swap Ratio
 
 const ctx5 = new web3.eth.Contract(jsonInterface, '0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED'); // HLY Bank
 
