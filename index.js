@@ -183,7 +183,7 @@ async function generateNewBalance() {
 
   // 1st we read the transactions file
   console.log(`loading bytx.txt...`);
-  const bytx = fs.readFileSync("./bytx_new.txt", "utf-8").split("\n");
+  const bytx = fs.readFileSync("./bytx_all.txt", "utf-8").split("\n");
 
   // We create an array of objects with all the lines from bytx file
   for (let i in bytx) {
