@@ -63,10 +63,10 @@ const ctx5 = new web3.eth.Contract(
 let balances = {},
   bytx = [];
 const banks = {
-  "0x3074cf20ecd1cfe96b3ee43968d0c426f775171a": "dai",
+  "0x3074cf20ECD1Cfe96b3Ee43968d0c426f775171a": "dai",
   "0xB3617363eDEc16cB0D30a5912Eb7A6B1D48e2875": "lumen",
   "0xb684CAB219dE861a49b396Ae3BbB1fc8702286E3": "magic",
-  "0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61": "uni",
+  "0x3636421e71dCF0Bfcbb08FeeB62E0275ea5AcD61": "uni",
   "0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED": "hly",
 };
 async function events(ctx) {
@@ -213,7 +213,7 @@ async function generateNewBalance() {
         locked: 0,
         unlocked: 0,
       };
-      result.push(array[value.account]);
+    //   result.push(array[value.account]);
     }
 
     //Information of the transaction
@@ -221,26 +221,38 @@ async function generateNewBalance() {
 
     //Classification by bank
     if (banks[bank.to]) {
+        if(value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
+            console.log(bank.to)
       switch (banks[bank.to]) {
         case "dai":
           array[value.account].dai += +value.amount;
           array[value.account].unlocked += +value.amount;
+          if(value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
+            console.log("dai: " + array[value.account].dai)
           break;
         case "lumen":
           array[value.account].lumen += +value.amount;
           array[value.account].unlocked += +value.amount;
+          if(value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
+            console.log("lumen: " + array[value.account].lumen)
           break;
         case "magic":
           array[value.account].magic += +value.amount;
           array[value.account].unlocked += +value.amount;
+          if(value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
+            console.log("magic: " + array[value.account].magic)
           break;
         case "uni":
           array[value.account].uni += +value.amount;
           array[value.account].unlocked += +value.amount;
+          if(value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
+            console.log("uni: " + array[value.account].uni)
           break;
         case "hly":
           array[value.account].hly += +value.amount;
           array[value.account].locked += +value.amount;
+          if(value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
+            console.log("hly: " + array[value.account].hly);
           break;
       }
       array[value.account].total += +value.amount;
@@ -248,6 +260,7 @@ async function generateNewBalance() {
     return array;
   }, Promise.resolve([]));
 
+  console.log(result["0x498Dd5A79ab7e19Be1dA81738239214F807E3462"]);
   //Write the new file
   console.log("writing deposits_grouped_by_account.txt");
   txt.push("account,dai,lumen,magic,uni,hly,locked,unlocked,total");
@@ -278,6 +291,8 @@ async function main() {
   // }
   // console.log('Building whitelist based on transaction list...')
   // await generateBalance();
+//   const tx = await web3.eth.getTransaction("0x6f485004da6a4d89446f92193051db709440ecfc9474353b2626154a8019952e")
+//   console.log(tx)
   await generateNewBalance();
 }
 
