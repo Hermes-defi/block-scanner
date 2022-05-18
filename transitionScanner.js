@@ -4,7 +4,7 @@ const PUBLIC_RATIO = 0.5603998308; //Public Swap Ratio
 
 const fs = require("fs");
 // use this rpc for the scan
-const rpcArchive = "wss://a.ws.s0.t.hmny.io";
+const rpcArchive = "https://rpc.hermesdefi.io/";
 
 const Web3 = require("web3");
 const web3 = new Web3(rpcArchive);
@@ -27,6 +27,7 @@ async function generateNewBalance() {
   const bytx = fs.readFileSync("./bytx_all.txt", "utf-8").split("\n");
 
   // We create an array of objects with all the lines from bytx file
+  let iter = 0;
   for (let i in bytx) {
     const line = {
       tx: bytx[i].split(",")[0],
@@ -34,6 +35,8 @@ async function generateNewBalance() {
       amount: bytx[i].split(",")[2],
     };
     balancesArray.push(line);
+    iter++;
+    if(iter == 50) break;
   }
 
   //Here we group all the information by account and classify them by bank
@@ -59,8 +62,6 @@ async function generateNewBalance() {
     let bank = await web3.eth.getTransaction(value.tx);
     //Classification by bank
     if (banks[bank.to]) {
-    //   if (value.account === "0x498Dd5A79ab7e19Be1dA81738239214F807E3462")
-    //     console.log(bank.to);
       //New HLY PUBLIC RATIO
       if (banks[bank.to] === "hly" && bank.blockNumber >= 23670581) {
         array[value.account].airdropped_pHRMS += +(value.amount * PUBLIC_RATIO);
