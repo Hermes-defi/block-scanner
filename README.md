@@ -1,11 +1,10 @@
 # Checking your balance
-If you wish to verify your calculated PLTS amount across all banks and the corresponding HRMS you will receive at the bonus swap rate, open https://github.com/Hermes-defi/block-scanner/blob/main/all_addresses.txt and search for your address.
-The format of all_addresses.txt is:
+The summary files for all of the banks are available! 
+1. If you participated in 1DAI, LUMEN, UNI, or MAGIC banks. [Whitelisted PLTS amounts](https://raw.githubusercontent.com/Hermes-defi/block-scanner/main/accounts_PLTS_whitelist.csv)
+2. If you participated in the HLY bank, you will be airdropped pHRMS directly. [Airdrop pHRMS amounts](https://raw.githubusercontent.com/Hermes-defi/block-scanner/main/accounts_pHRMS_airdrop.csv)
+3. If you wish to dig through the entire summary of this scanner, you can view it [here](https://raw.githubusercontent.com/Hermes-defi/block-scanner/main/deposits_grouped_by_account_WEI.txt). 
 
-`address, total PLTS, UnlockedBank PLTS (1DAI, LUMEN, UNI, MAGIC), LockedBank PLTS (HLY), Ratio, total HRMS, unlockedHRMS, airdroppedHRMS`
-
-# Updates due to Bank Lock Configuration
-Due to a configuration error in the Bank deployment function, our Banks are unlocking at different times than the bonus reward end block. We are splitting the banks into two groups based on if they will be unlocked by our new (delayed) DEX launch. If you are affected by this, you can view your address in https://github.com/Hermes-defi/block-scanner/blob/main/affected_addresses.txt
+The available amount of whitelisted PLTS you are able to swap will be set by a whitelist function on the pHRMS swap contract. You will be able to view your remaining PLTS bonus swap amount on our front end as well.
 
 ## Unlocked by launch
 ```
@@ -19,12 +18,9 @@ MAGIC Bank actually unlocks 1652295620 or Wed May 11 2022 15:00:20 UTC-0400
 HLY Bank actually unlocks 1653490853 or Wed May 25 2022 11:00:53 UTC-040
 ```
 
-Because users will not be able to swap PLTS contained within the locked banks, we will instead airdrop pHRMS to the affected wallets directly. This will be done for both the bonus rate (this repo) and at the public rate (0.5603998308).
-
 # How to Run
 
 - This application run on node 16.
 - Run `npm i` or `yarn` to install dependencies.
-- Run `node index.js` and wait to generate bytx.txt, addresses.txt, and affected_addresses.txt
-- Check that the files were generated properly, sometimes they `node index.js` needs to be run twice.
-- Check your balance on all_addresses.txt.
+- Run `node index.js` and wait!
+- Run `node transitionScanner.js` to generate the final summary file from recorded transactions.
