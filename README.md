@@ -26,11 +26,12 @@ HLY Bank actually unlocks 1653490853 or Wed May 25 2022 11:00:53 UTC-040
 - Run `node transitionScanner.js` to generate the final summary file from recorded transactions.
 
 ## File Descriptions
-`bytx_all.txt` - All deposit events for our banks. 
-`deposits_grouped_by_account.txt` - A summary of the bonus rate (0.66...) whitelisted PLTS for each wallet as well as any airdropped pHRMS.
-`deposits_grouped_by_account_WEI.txt` - A summary file with additional formatting.
-`accounts_PLTS_whitelist.csv` - A simplified file with whitelisted PLTS ONLY.
-`accounts_pHRMS_airdrop.csv` - A simplified file with airdropped pHRMS ONLY.
+- `bytx_all.txt` - All deposit events for our banks. 
+- `deposits_grouped_by_account.txt` - A summary of the bonus rate (0.66...) whitelisted PLTS for each wallet as well as any airdropped pHRMS.
+- `deposits_grouped_by_account_WEI.txt` - A summary file with additional formatting.
+- `accounts_PLTS_whitelist.csv` - A simplified file with whitelisted PLTS ONLY.
+- `accounts_pHRMS_airdrop.csv` - A simplified file with airdropped pHRMS ONLY.
 
-`index.js` - Script to generate `bytx_all.txt`
-`transitionScanner.js` - Script to generate simplified summary files from individual deposit transactions.
+## Script Descriptions
+- `index.js` - Script to generate `bytx_all.txt`
+- `transitionScanner.js` - Script to generate simplified summary files from individual deposit transactions.
